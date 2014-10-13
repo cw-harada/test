@@ -49,7 +49,9 @@ module.exports = function (grunt) {
 				while (command = process.shift()) {
 					if (_.isFunction(command)) {
 						grunt.verbose.oklns(command.name);
-						command(answer);
+						if (command(answer) === false) {
+							throw new Error('process execute error');
+						}
 						continue;
 					}
 					// log command
