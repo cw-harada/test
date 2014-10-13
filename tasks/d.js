@@ -26,18 +26,19 @@ module.exports = function (grunt) {
 		};
 		// execute question and commands
 		inquirer.prompt(questions, function(answers) {
-			shell.cd(basePath);
 			// initialize
 			var answer = answers[questions.name];
 			var process = config.process[answer] || config.process;
 			if (!_.isArray(process)) {
 				process = [];
 			}
+			// change diretory to base path
+			shell.cd(basePath);
 			// execute commands
 			_.each(process, function(command) {
 				// log command
 				grunt.verbose.oklns(command);
-				// 
+				// change directory
 				if (/^cd/.test(command)) {
 					var match = command.match(/^cd (.*)/);
 					match[1] && shell.cd(match[1]);
