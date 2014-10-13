@@ -18,6 +18,9 @@ module.exports = function (grunt) {
           'pwd',
           'ls -la .',
           'pause',
+          function name1(answer) {
+            console.log('answer:', answer);
+          }
         ]
       },
       test2: {

@@ -47,6 +47,11 @@ module.exports = function (grunt) {
 				// execute commands
 				var command;
 				while (command = process.shift()) {
+					if (_.isFunction(command)) {
+						grunt.verbose.oklns(command.name);
+						command(answer);
+						continue;
+					}
 					// log command
 					grunt.verbose.oklns(command);
 					// pause
