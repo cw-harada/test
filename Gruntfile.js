@@ -17,6 +17,7 @@ module.exports = function (grunt) {
           'cd node_modules',
           'pwd',
           'ls -la .',
+          'pause',
         ]
       },
       test2: {

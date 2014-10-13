@@ -6,11 +6,13 @@
  * Licensed under the MIT license.
  */
 'use strict';
+
 // definition grunt plugin
 module.exports = function (grunt) {
 	// require
 	var inquirer = require('inquirer');
 	var shell = require('shelljs');
+	var pause = require('./libs/pause');
   var basePath = shell.pwd();
 	// register task
 	grunt.registerMultiTask('d', 'execute shell commands.', function () {
@@ -34,23 +36,42 @@ module.exports = function (grunt) {
 			}
 			// change diretory to base path
 			shell.cd(basePath);
-			// execute commands
-			_.each(process, function(command) {
-				// log command
-				grunt.verbose.oklns(command);
-				// change directory
-				if (/^cd/.test(command)) {
-					var match = command.match(/^cd (.*)/);
-					match[1] && shell.cd(match[1]);
+			//
+			var wait = false;
+			(function run() {
+				// is wait
+				if (wait) {
+					setTimeout(run, 100);
 					return;
 				}
-				// execute command
-				if (shell.exec(command).code) {
-					throw new Error('command execute error');
+				// execute commands
+				var command;
+				while (command = process.shift()) {
+					// log command
+					grunt.verbose.oklns(command);
+					// pause
+					if (/^pause$/.test(command)) {
+						wait = true;
+				    pause(function() {
+				    	wait = false;
+				    });
+				    setTimeout(run, 100);
+						return;
+					}
+					// change directory
+					if (/^cd/.test(command)) {
+						var match = command.match(/^cd (.*)/);
+						match[1] && shell.cd(match[1]);
+						continue;
+					}
+					// execute command
+					if (shell.exec(command).code) {
+						throw new Error('command execute error');
+					}
 				}
-			});
-			// 
-			done();
+				done();
+			})();
+			
 		});
 	});
 };
