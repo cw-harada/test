@@ -33,6 +33,15 @@ module.exports = function (grunt) {
             'ls -la .',
           ]
         }
+      },
+      test3: {
+        message: 'run execute message3.',
+        type: 'ok',
+        process: [
+          'fluentd -vv -c ~/.fluentd/fluent.conf &',
+          'pause',
+          'pwd',
+        ]
       }
 	  },
   });
@@ -42,6 +51,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'd:test1',
       'd:test2',
+      'd:test3',
     ]);
   });
 };

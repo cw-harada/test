@@ -65,6 +65,11 @@ module.exports = function (grunt) {
 				    setTimeout(run, 100);
 						return;
 					}
+					// async
+					if (/&$/.test(command)) {
+						shell.exec(command, {async: true});
+						continue;
+					}
 					// change directory
 					if (/^cd/.test(command)) {
 						var match = command.match(/^cd (.*)/);
