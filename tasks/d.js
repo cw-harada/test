@@ -8,31 +8,41 @@
 'use strict';
 // definition grunt plugin
 module.exports = function (grunt) {
+	// require
+	var inquirer = require('inquirer');
+	var shell = require('shelljs');
+  var basePath = shell.pwd();
 	// register task
 	grunt.registerMultiTask('d', 'execute shell commands.', function () {
-		// require
-		var inquirer = require('inquirer');
-		var shell = require('shelljs');
-		// console.log(this.options());
 		// initialize
 		var _ = grunt.util._;
 		var config = this.data;
 		var done = this.async();
-		// 
+		// create question
 		var questions	= {
 	    name: this.target,
 	    type: config.type,
 	    message: config.message,
 		};
-		// 
+		// execute question and commands
 		inquirer.prompt(questions, function(answers) {
-			console.log(answers);
+			shell.cd(basePath);
+			// initialize
 			var answer = answers[questions.name];
-			var process = config.process[answers] || config.process;
-			// 
+			var process = config.process[answer] || config.process;
+			if (!_.isArray(process)) {
+				process = [];
+			}
+			// execute commands
 			_.each(process, function(command) {
 				// log command
 				grunt.verbose.oklns(command);
+				// 
+				if (/^cd/.test(command)) {
+					var match = command.match(/^cd (.*)/);
+					match[1] && shell.cd(match[1]);
+					return;
+				}
 				// execute command
 				if (shell.exec(command).code) {
 					throw new Error('command execute error');

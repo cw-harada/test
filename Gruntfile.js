@@ -11,15 +11,24 @@ module.exports = function (grunt) {
   grunt.initConfig({
 	  d: {
 	    test1: {
-        message: 'run execute message.',
+        message: 'run execute message1.',
         type: 'confirm',
         process: [
+          'cd node_modules',
+          'pwd',
           'ls -la .',
-          'sleep 1',
-          'echo "aaaaa"',
-          'git status',
-          'echo "bbbb"'
         ]
+      },
+      test2: {
+        message: 'run execute message2.',
+        type: 'confirm',
+        process: {
+          false: [
+            'cd tasks',
+            'pwd',
+            'ls -la .',
+          ]
+        }
       }
 	  },
   });
@@ -28,6 +37,7 @@ module.exports = function (grunt) {
   	require('./tasks/d')(grunt);
     grunt.task.run([
       'd:test1',
+      'd:test2',
     ]);
   });
 };
