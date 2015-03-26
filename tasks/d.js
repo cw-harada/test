@@ -65,13 +65,27 @@ module.exports = function (grunt) {
             setTimeout(run, 100);
             return;
           }
+          // wait for
+          if (/^wait /.test(command)) {
+          	wait = true;
+            var match = command.match(/^wait (.*)/);
+            setTimeout(function waitfor() {
+            	if ((wait = !!shell.exec(match[1]).code) === true) {
+            		setTimeout(waitfor, 100);
+            	}
+
+            }, 1000);
+            
+            setTimeout(run, 100);
+            return;
+          }
           // async
           if (/&$/.test(command)) {
             shell.exec(command, {async: true});
             continue;
           }
           // change directory
-          if (/^cd/.test(command)) {
+          if (/^cd /.test(command)) {
             var match = command.match(/^cd (.*)/);
             match[1] && shell.cd(match[1]);
             continue;

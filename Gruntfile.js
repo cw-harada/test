@@ -42,16 +42,16 @@ module.exports = function (grunt) {
           'pause',
           'pwd',
         ]
+      },
+      test4: {
+        message: 'run execute message4',
+        type: 'ok',
+        process: [
+          'wait echo 1 | grep 1',
+        ]
       }
 	  },
   });
-  // tasks
-  grunt.registerTask('d', function() {
-  	require('./tasks/d')(grunt);
-    grunt.task.run([
-      'd:test1',
-      'd:test2',
-      'd:test3',
-    ]);
-  });
+
+  require('./tasks/d')(grunt);
 };
